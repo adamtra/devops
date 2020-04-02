@@ -6,10 +6,12 @@ export default class Form extends React.Component {
         super(props);
         this.state = {
             firstName: "",
-            lastName: ""
+            lastName: "",
+            showForm: true,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleInputChange(event) {
@@ -22,10 +24,24 @@ export default class Form extends React.Component {
         });
     }
 
+    handleSubmit(event) {
+      event.preventDefault();
+      this.setState({
+        showForm: false,
+      });
+    }
+
+    get fullname() {
+      return `${this.state.firstName} ${this.state.lastName}`;
+    }
+    
     render() {
-        return (
-          <Card className="p-2 m-2">
+      let container;
+      if (this.state.showForm) {
+        container = (
+          <div>
             <form
+              onSubmit={this.handleSubmit}
               id="name-form"
               className="d-flex flex-column p-2"
               autoComplete="off"
@@ -50,11 +66,20 @@ export default class Form extends React.Component {
               />
             </form>
             <CardActions>
-              <Button form="name-form" variant="contained" type="submit" color="primary">
+              <Button
+                form="name-form"
+                variant="contained"
+                type="submit"
+                color="primary"
+              >
                 Wyślij
               </Button>
             </CardActions>
-          </Card>
+          </div>
         );
+      } else {
+        container = <h2>Witaj {this.fullname}!</h2>;
+      }
+      return <Card className="p-2 m-2">{container}</Card>;
     }
 }
