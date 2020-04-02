@@ -1,12 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import "bootstrap/dist/css/bootstrap.css";
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Form from './form/Form';
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core";
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <div className="vh-100 overflow-auto">
+        <Form />
+      </div>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
