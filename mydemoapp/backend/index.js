@@ -50,8 +50,7 @@ const addResult = (value) => {
             resolve();
           })
           .catch((err) => {
-            console.log(err);
-            reject();
+            reject(err);
           });
     })
 }
@@ -79,14 +78,19 @@ app.get("/:n1/:n2", (req, res) => {
   }
   const key = `${input1},${input2}`;
   client.get(key, async (err, value) => {
-    if (value !== null) {
-        await addResult(value);
-        return res.send(`${value}`);
-    }
-    const result = nwd(input1, input2);
-    client.set(key, result);
-    await addResult(result);
-    return res.send(`${result}`);
+      try {
+          if (value !== null) {
+              await addResult(value);
+              return res.send(`${value}`);
+          }
+          const result = nwd(input1, input2);
+          client.set(key, result);
+          await addResult(result);
+          return res.send(`${result}`);
+      } catch (err) {
+          console.log(err);
+          return res.status(500);
+      }
   });
 });
 
