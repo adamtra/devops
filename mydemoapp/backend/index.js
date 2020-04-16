@@ -65,33 +65,33 @@ app.get("/", (req, res) => {
         });
 });
 
-app.get("/:n1/:n2", (req, res) => {
-  const n1 = parseInt(req.params.n1);
-  const n2 = parseInt(req.params.n2);
-  let input1, input2;
-  if (n1 > n2) {
-    input1 = n1;
-    input2 = n2;
-  } else {
-    input1 = n2;
-    input2 = n1;
-  }
-  const key = `${input1},${input2}`;
-  client.get(key, async (err, value) => {
+app.post("/", (req, res) => {
+    const n1 = parseInt(req.body.n1) || 0;
+    const n2 = parseInt(req.body.n2) || 0;
+    let input1, input2;
+    if (n1 > n2) {
+      input1 = n1;
+      input2 = n2;
+    } else {
+      input1 = n2;
+      input2 = n1;
+    }
+    const key = `${input1},${input2}`;
+    client.get(key, async (err, value) => {
       try {
-          if (value !== null) {
-              await addResult(value);
-              return res.send(`${value}`);
-          }
-          const result = nwd(input1, input2);
-          client.set(key, result);
-          await addResult(result);
-          return res.send(`${result}`);
+        if (value !== null) {
+          await addResult(value);
+          return res.send(`${value}`);
+        }
+        const result = nwd(input1, input2);
+        client.set(key, result);
+        await addResult(result);
+        return res.send(`${result}`);
       } catch (err) {
-          console.log(err);
-          return res.status(500);
+        console.log(err);
+        return res.status(500);
       }
-  });
+    });
 });
 
 app.listen(3000, () => {
