@@ -55,7 +55,7 @@ const addResult = (value) => {
     })
 }
 
-app.get("/", (req, res) => {
+app.get("/results", (req, res) => {
     pgClient.query('SELECT DISTINCT number FROM results')
         .then((data) => {
             return res.json(data.rows);
@@ -65,32 +65,32 @@ app.get("/", (req, res) => {
         });
 });
 
-app.post("/", (req, res) => {
+app.post("/results", (req, res) => {
     const n1 = parseInt(req.body.n1) || 0;
     const n2 = parseInt(req.body.n2) || 0;
     let input1, input2;
     if (n1 > n2) {
-      input1 = n1;
-      input2 = n2;
+        input1 = n1;
+        input2 = n2;
     } else {
-      input1 = n2;
-      input2 = n1;
+        input1 = n2;
+        input2 = n1;
     }
     const key = `${input1},${input2}`;
     client.get(key, async (err, value) => {
-      try {
+        try {
         if (value !== null) {
-          await addResult(value);
-          return res.send(`${value}`);
+            await addResult(value);
+            return res.send(`${value}`);
         }
         const result = nwd(input1, input2);
         client.set(key, result);
         await addResult(result);
         return res.send(`${result}`);
-      } catch (err) {
+        } catch (err) {
         console.log(err);
         return res.status(500);
-      }
+        }
     });
 });
 
