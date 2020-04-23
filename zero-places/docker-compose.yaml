@@ -33,3 +33,12 @@ services:
             - PG_DATABASE=${pgDatabase}
             - PG_PASSWORD=${pgPassword}
             - PG_PORT=${pgPort}
+        
+    frontend:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./frontend
+        volumes: 
+            - /opt/app/node_modules
+            - ./frontend:/opt/app
+        tty: true
