@@ -32,6 +32,17 @@ pgClient.query('CREATE TABLE IF NOT EXISTS places (a INT, b INT, c INT, p1 INT N
         console.log(err);
     });
 
+const zeroPlaces = (a, b, c) => {
+    const delta = Math.pow(b, 2) - 4 * a * c;
+    if (delta >= 0) {
+        const p1 = (-b - Math.sqrt(delta)) / (2 * a);
+        const p2 = (-b + Math.sqrt(delta)) / (2 * a);
+        return [p1, p2];
+    } else {
+        return [null, null];
+    }
+}
+
 const addResult = (a, b, c, p1, p2) => {
     return new Promise((resolve, reject) => {
         pgClient
@@ -66,7 +77,20 @@ app.post("/results", (req, res) => {
     const c = parseInt(req.body.c) || 0;
     const key = `${a},${b},${c}`;
     client.get(key, async (err, value) => {
-        
+        try {
+          if (value !== null) {
+            const places = value.split(",");
+            return res.json(places);
+          }
+          const places = zeroPlaces(a, b, c);
+          const newValue = places.join(",");
+          client.set(key, newValue);
+          await addResult(a, b, c, places[0], places[1]);
+          return res.json(places);
+        } catch (err) {
+          console.log(err);
+          return res.status(500);
+        }
     });
 });
 
