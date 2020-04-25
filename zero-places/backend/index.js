@@ -27,10 +27,21 @@ pgClient.on('error', () => {
     console.log('Error');
 });
 
-pgClient.query('CREATE TABLE IF NOT EXISTS places (a INT, b INT, c INT, p1 INT NULL, p2 INT NULL)')
-    .catch((err) => {
-        console.log(err);
-    });
+const connect = () => {
+  pgClient.connect().then(() => {
+    pgClient.query('CREATE TABLE IF NOT EXISTS places (a INT, b INT, c INT, p1 NUMERIC (8, 2) NULL, p2 NUMERIC (8, 2) NULL)')
+        .catch((err) => {
+            console.log(err);
+        });
+  }).catch(() => {
+    setTimeout(() => {
+      connect();
+    }, 1000);
+  });
+}
+
+connect();
+
 
 const zeroPlaces = (a, b, c) => {
     const delta = Math.pow(b, 2) - 4 * a * c;
