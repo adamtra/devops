@@ -32,7 +32,7 @@ export default class Form extends React.Component {
             [name]: parseInt(value, 10),
         }, () => {
             this.setState({
-                formValid: this.state.a != 0,
+                formValid: this.state.a !== 0,
             });
         });
     }
@@ -53,6 +53,18 @@ export default class Form extends React.Component {
     }
 
     render() {
+        const result = (
+            <div>
+                <h2>Miejsca zerowe:</h2>
+                <ul>
+                {this.state.places.map((place, i) => {
+                    return (
+                        <li key={i}>Miejsce {i + 1} = {place}</li>
+                    );
+                })}
+                </ul>
+            </div>
+        );
         return <div>
             <form
                 onSubmit={this.handleSubmit}
@@ -70,7 +82,7 @@ export default class Form extends React.Component {
                     onChange={this.handleInputChange}
                     InputProps={{
                         startAdornment: (
-                            <InputAdornment position="start">a=</InputAdornment>
+                            <InputAdornment position="start">a =</InputAdornment>
                         ),
                         endAdornment: (
                             <InputAdornment position="start">
@@ -90,7 +102,7 @@ export default class Form extends React.Component {
                     onChange={this.handleInputChange}
                     InputProps={{
                         startAdornment: (
-                            <InputAdornment position="start">b=</InputAdornment>
+                            <InputAdornment position="start">b =</InputAdornment>
                         ),
                         endAdornment: (
                             <InputAdornment position="start">x</InputAdornment>
@@ -108,7 +120,7 @@ export default class Form extends React.Component {
                     onChange={this.handleInputChange}
                     InputProps={{
                         startAdornment: (
-                            <InputAdornment position="start">c=</InputAdornment>
+                            <InputAdornment position="start">c =</InputAdornment>
                         ),
                     }}
                     required
@@ -125,7 +137,11 @@ export default class Form extends React.Component {
                     Oblicz miejsca zerowe
             </Button>
             </CardActions>
-            {this.state.showResult ? <h2>Miejsca zerowe: {this.state.places}</h2> : null}
+            {this.state.showResult ? (
+                <div className="p-2">
+                    {(this.state.places[0] === null || this.state.places[0] === '') ? (<h2>Brak miejsc zerowych</h2>) : result}
+                </div>
+            ) : null}
         </div>;
     }
 }
