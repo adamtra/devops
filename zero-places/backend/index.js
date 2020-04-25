@@ -46,8 +46,10 @@ connect();
 const zeroPlaces = (a, b, c) => {
     const delta = Math.pow(b, 2) - 4 * a * c;
     if (delta >= 0) {
-        const p1 = (-b - Math.sqrt(delta)) / (2 * a);
-        const p2 = (-b + Math.sqrt(delta)) / (2 * a);
+        let p1 = (-b - Math.sqrt(delta)) / (2 * a);
+        p1 = Math.round(p1 * 100) / 100;
+        let p2 = (-b + Math.sqrt(delta)) / (2 * a);
+        p2 = Math.round(p2 * 100) / 100;
         return [p1, p2];
     } else {
         return [null, null];
@@ -84,6 +86,9 @@ app.get("/results", (req, res) => {
 
 app.post("/results", (req, res) => {
     const a = parseInt(req.body.a) || 0;
+    if (a === 0) {
+      return res.status(422).json('Parametr a nie może być równy 0');
+    }
     const b = parseInt(req.body.b) || 0;
     const c = parseInt(req.body.c) || 0;
     const key = `${a},${b},${c}`;
