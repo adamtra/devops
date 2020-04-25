@@ -6,6 +6,7 @@ import {
     TableRow,
     TableBody,
     TableCell,
+    CircularProgress,
 } from "@material-ui/core";
 import axios from "axios";
 
@@ -22,6 +23,7 @@ export default class Results extends React.Component {
         super(props);
         this.state = {
             results: [],
+            showTable: false,
         };
         this.getResults = this.getResults.bind(this);
     }
@@ -34,12 +36,12 @@ export default class Results extends React.Component {
         const results = await axios.get('/api/results');
         this.setState({
             results: results.data,
+            showTable: true,
         });
     }
 
     render() {
-        return (
-        <div>
+        const table = (
             <TableContainer>
                 <Table>
                     <TableHead>
@@ -68,6 +70,11 @@ export default class Results extends React.Component {
                     </TableBody>
                 </Table>
             </TableContainer>
+        )
+        const loader = <CircularProgress className="loader mx-auto my-2" color="secondary" />;
+        return (
+        <div className="d-flex">
+            {this.state.showTable ? table : loader}
         </div>
         );
     }

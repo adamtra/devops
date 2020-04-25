@@ -25,3 +25,9 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.loader {
+  width: 70vmin!important;
+  max-width: 20vw;
+  height: auto!important;
+}
