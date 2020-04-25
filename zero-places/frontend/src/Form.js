@@ -11,11 +11,12 @@ export default class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            a: 0,
+            a: 1,
             b: 0,
             c: 0,
             showResult: false,
             places: [null, null],
+            formValid: true,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -28,7 +29,11 @@ export default class Form extends React.Component {
         const name = target.name;
 
         this.setState({
-            [name]: value,
+            [name]: parseInt(value, 10),
+        }, () => {
+            this.setState({
+                formValid: this.state.a != 0,
+            });
         });
     }
 
@@ -59,6 +64,8 @@ export default class Form extends React.Component {
                     className="px-2"
                     id="a"
                     name="a"
+                    type="number"
+                    step="1"
                     value={this.state.a}
                     onChange={this.handleInputChange}
                     InputProps={{
@@ -77,6 +84,8 @@ export default class Form extends React.Component {
                     className="px-2"
                     id="b"
                     name="b"
+                    type="number"
+                    step="1"
                     value={this.state.b}
                     onChange={this.handleInputChange}
                     InputProps={{
@@ -93,6 +102,8 @@ export default class Form extends React.Component {
                     className="px-2"
                     id="c"
                     name="c"
+                    type="number"
+                    step="1"
                     value={this.state.c}
                     onChange={this.handleInputChange}
                     InputProps={{
@@ -105,6 +116,7 @@ export default class Form extends React.Component {
             </form>
             <CardActions>
                 <Button
+                    disabled={!this.state.formValid}
                     form="function-form"
                     variant="contained"
                     type="submit"
@@ -113,7 +125,7 @@ export default class Form extends React.Component {
                     Oblicz miejsca zerowe
             </Button>
             </CardActions>
-            {this.state.showResult ? <h2>Wysłano formularz: {this.state.places}</h2> : null}
+            {this.state.showResult ? <h2>Miejsca zerowe: {this.state.places}</h2> : null}
         </div>;
     }
 }
