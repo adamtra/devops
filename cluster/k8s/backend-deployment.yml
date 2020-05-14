@@ -22,7 +22,7 @@ spec:
                   image: adamtra/cluster-backend
 
                   env:
-                    - name: REDIST_HOST
+                    - name: REDIS_HOST
                       value: my-redis-service
                     - name: REDIS_PORT
                       value: '6379'
