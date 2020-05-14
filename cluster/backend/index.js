@@ -14,8 +14,19 @@ const redisClient = redis.createClient({
 
 const appPort = 5000;
 
-app.get('/', (req, res) => {
-    return res.json(`Działa`);
+app.get('/:key', (req, res) => {
+  const { key } = req.params;
+  redisClient.get(key, (err, value) => {
+    if (err) {
+      console.log(err);
+      return res.send("Wystąpił błąd");
+    }
+    if (value !== null) {
+      return res.send("Znaleziono w cache");
+    }
+    redisClient.set(key, "");
+    return res.send("Dodano do cache");
+  });
 });
 
 app.listen(appPort, () => {
