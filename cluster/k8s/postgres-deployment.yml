@@ -20,12 +20,22 @@ spec:
             containers:
                 - name: my-postgres-container
                   image: postgres
+                  volumeMount:
+                    - mountPath: /var/lib/postgresql/data/pgdata
+                      name: postgresvolume
+                      subPath: postgres
                   env:
+                    - name: PGDATA
+                      value: /var/lib/postgresql/data/pgdata
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
                             name: myapp-secret
                             key: PG_PASSWORD
+            volumes:
+                - name: postgresvolume
+                  persistentVolumeClaim:
+                    claimName: postgres-pvc
 
     replicas: 1
     selector:
