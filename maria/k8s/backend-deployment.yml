@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+    name: backend-deployment
+    labels:
+        app: mybackend
+        type: backend
+
+spec:
+    template:
+        metadata:
+            name: mybackend-pod
+            labels:
+                app: mybackend
+                type: backend
+
+        spec:
+            containers:
+                - name: my-backend-container
+                  image: adamtra/exam-backend
+
+                  env:
+                    - name: MARIA_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: mariadb-secret
+                            key: MARIA_PASSWORD
+                  envFrom:
+                    - configMapRef:
+                        name: mariadb-config
+    replicas: 3
+    selector:
+        matchLabels:
+            type: backend

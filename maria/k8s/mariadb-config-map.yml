@@ -1,0 +1,11 @@
+apiVersion: v1
+
+kind: ConfigMap
+
+metadata:
+  name: mariadb-config
+
+data:
+  MARIA_HOST: my-mariadb-service
+  MARIA_USER: exam
+  MARIA_DATABASE: exam

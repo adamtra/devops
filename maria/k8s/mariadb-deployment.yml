@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+    name: mariadb-deployment
+    labels:
+        app: mymariadb
+        type: db
+
+spec:
+    template:
+        metadata:
+            name: mymariadb-pod
+            labels:
+                app: mymariadb
+                type: db
+
+        spec:
+            containers:
+                - name: my-mariadb-container
+                  image: mariadb
+                  volumeMount:
+                    - mountPath: /var/lib/mysql
+                      name: mariadbvolume
+                  env:
+                    - name: MYSQL_ROOT_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: mariadb-secret
+                            key: MARIA_PASSWORD
+                    - name: MYSQL_DATABASE
+                      valueFrom:
+                        configMapKeyRef:
+                            name: mariadb-config
+                            key: MARIA_DATABASE
+                    - name: MYSQL_USER
+                      valueFrom:
+                        configMapKeyRef:
+                            name: mariadb-config
+                            key: MARIA_USER
+                    - name: MYSQL_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: mariadb-secret
+                            key: MARIA_PASSWORD
+            volumes:
+                - name: mariadbvolume
+                  persistentVolumeClaim:
+                    claimName: mariadb-pvc
+
+    replicas: 1
+    selector:
+        matchLabels:
+            type: db
